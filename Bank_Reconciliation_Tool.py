@@ -223,8 +223,8 @@ column_widths = {
     'E': (13.46, 'center'),    
     'F': (13.46, 'right'),     
     'G': (13.46, 'center'),    
-    'H': (13.46, 'center'),    
-    'I': (13.46, 'center'),    
+    'H': (2, 'center'),    
+    'I': (15, 'center'),    
     'J': (22.92, 'left'),      
     'K': (42.26, 'right'),     
     'L': (13.46, 'right')      
@@ -250,7 +250,7 @@ header_styles_verify = {
     'E': ('00009B', 'FFFFFF', '微软雅黑', 10),   
     'F': ('00009B', 'FFFFFF', '微软雅黑', 10),   
     'G': ('00009B', 'FFFFFF', '微软雅黑', 10),   
-    'H': ('00009B', 'FFFFFF', '微软雅黑', 10),   
+    'H': ('FFFFFF', 'FFFFFF', '微软雅黑', 10),   
     'I': ('333F4F', 'FFFFFF', '微软雅黑', 10),   
     'J': ('333F4F', 'FFFFFF', '微软雅黑', 10),   
     'K': ('333F4F', 'FFFFFF', '微软雅黑', 10),   
@@ -277,10 +277,10 @@ data_styles_verify = {
     'F': ('FFFFFFFF', '002060', '微软雅黑', 10),  
     'G': ('FFFFFFFF', '002060', '微软雅黑', 10),  
     'H': ('FFFFFFFF', '002060', '微软雅黑', 10),  
-    'I': ('FFFFFFFF', '002060', '微软雅黑', 10),  
-    'J': ('FFFFFFFF', '002060', '微软雅黑', 10),  
-    'K': ('FFFFFFFF', '002060', '微软雅黑', 10),  
-    'L': ('FFFFFFFF', '002060', '微软雅黑', 10),  
+    'I': ('FFFFFFFF', '2c3744', '微软雅黑', 10),  
+    'J': ('FFFFFFFF', '2c3744', '微软雅黑', 10),  
+    'K': ('FFFFFFFF', '2c3744', '微软雅黑', 10),  
+    'L': ('FFFFFFFF', '2c3744', '微软雅黑', 10),  
 }
 
 set_data_style(ws_verify, data_styles_verify)
