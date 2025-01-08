@@ -40,7 +40,7 @@ jobs:
       run: |
         ARTIFACT_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           https://api.github.com/repos/${{ github.repository }}/actions/artifacts \
-          | jq '.artifacts[] | select(.name=="test-artifact") | .id')
+          | jq '.artifacts[] | select(.name=="mgs_boc_recon") | .id')
         
         echo "Artifact ID: $ARTIFACT_ID"
         
