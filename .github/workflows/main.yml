@@ -35,19 +35,4 @@ jobs:
         name: mgs_boc_recon
         path: dist/Bank_Reconciliation_Tool.exe
    
-    - name: Get artifact download URL
-      id: get-url
-      run: |
-        ARTIFACT_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/actions/artifacts \
-          | jq '.artifacts[] | select(.name=="mgs_boc_recon") | .id')
-        
-        echo "Artifact ID: $ARTIFACT_ID"
-        
-        DOWNLOAD_URL="https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$ARTIFACT_ID/zip"
-        echo "::set-output name=download_url::$DOWNLOAD_URL"
-
-    - name: Send URL to Bark
-      run: |
-        BARK_URL="https://api.day.app/YvFVCKrbcd5u5R3RWnJ8h7/${{ steps.get-url.outputs.download_url }}?copy=test"
-        curl -X GET "$BARK_URL"
+ 
