@@ -25,7 +25,7 @@ jobs:
       run: pip install pandas numpy openpyxl xlrd 
  
     - name: Build EXE
-      run: pyinstaller --onefile Bank_Reconciliation_Tools.py
+      run: pyinstaller --onefile Bank_Reconciliation_Tool.py
       env:
         CC: mingw32-gcc
  
