@@ -1,0 +1,36 @@
+name: Build bld_Reconciliation_tool EXE
+ 
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+ 
+jobs:
+  build:
+    runs-on: windows-latest
+ 
+    steps:
+    - uses: actions/checkout@v2
+ 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+ 
+    - name: Install PyInstaller
+      run: pip install pyinstaller
+
+    - name: Install dependencies
+      run: pip install pandas numpy openpyxl xlrd 
+ 
+    - name: Build EXE
+      run: pyinstaller --onefile Bank_Reconciliation_Tools.py
+      env:
+        CC: mingw32-gcc
+ 
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: mgs_boc_recon
+        path: dist/mgs_boc_recon.exe
