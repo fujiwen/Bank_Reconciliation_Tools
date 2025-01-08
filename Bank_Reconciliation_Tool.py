@@ -4,9 +4,10 @@ from datetime import datetime
 import os
 import glob
 import time
-from openpyxl import load_workbook
+from openpyxl import load_workbook, Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 
+# 清理GL数据的函数
 def clean_gl_data(file_path):
     df = pd.read_excel(file_path, sheet_name='sheet1', skiprows=1)
     df.columns = df.columns.str.strip().str.lower()
@@ -27,6 +28,7 @@ def clean_gl_data(file_path):
         return cleaned_df if not cleaned_df.empty else None
     return None
 
+# 处理银行数据的函数
 def process_bank_data(file_path):
     df = pd.read_excel(file_path, engine='xlrd', skiprows=8)
     default_payee_name = "海南空港开发产业集团有限公司琼中福朋喜来登酒店分公司"
@@ -60,12 +62,19 @@ def process_bank_data(file_path):
     
     return pd.DataFrame(new_rows)
 
+# 主函数
 def main():
     gl_files = glob.glob('gl*.xlsx')
     bank_files = glob.glob('bank*.xls')
     combined_file_path = 'Combined_Data.xlsx'
 
-    with pd.ExcelWriter(combined_file_path, engine='openpyxl') as writer:
+    # 创建一个新的Workbook对象
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Temp"
+    wb.save(combined_file_path)
+
+    with pd.ExcelWriter(combined_file_path, engine='openpyxl', mode='a', if_sheet_exists='replace') as writer:
         if gl_files:
             gl_data = clean_gl_data(gl_files[0])
             if gl_data is not None and not gl_data.empty:
@@ -75,7 +84,7 @@ def main():
             bank_data = process_bank_data(bank_files[0])
             if not bank_data.empty:
                 bank_data.to_excel(writer, sheet_name='Bank Data', index=False)
-    
+
     print(f"所有数据已成功合并到 {combined_file_path}")
 
 if __name__ == "__main__":
@@ -168,27 +177,30 @@ green_font = Font(color="006100")
 ws_verify = wb['Bank_OK']
 
 ws_verify.insert_rows(1)
-ws_verify.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(verify_data.columns))
-ws_verify['A1'] = "银行 核对已成功 明细"
-ws_verify['A1'].font = green_font
-ws_verify['A1'].fill = green_fill
+if len(verify_data.columns) > 0:
+    ws_verify.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(verify_data.columns))
+    ws_verify['A1'] = "银行 核对已成功 明细"
+    ws_verify['A1'].font = green_font
+    ws_verify['A1'].fill = green_fill
 
 yellow_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
 yellow_font = Font(color="000000")  
 
 ws_unmatched_gl = wb['Unmatched_GL_Data']
 ws_unmatched_gl.insert_rows(1)
-ws_unmatched_gl.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(unmatched_gl_df.columns))
-ws_unmatched_gl['A1'] = "未匹配GL_DATA"
-ws_unmatched_gl['A1'].font = yellow_font
-ws_unmatched_gl['A1'].fill = yellow_fill
+if len(unmatched_gl_df.columns) > 0:
+    ws_unmatched_gl.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(unmatched_gl_df.columns))
+    ws_unmatched_gl['A1'] = "未匹配GL_DATA"
+    ws_unmatched_gl['A1'].font = yellow_font
+    ws_unmatched_gl['A1'].fill = yellow_fill
 
 ws_unmatched_bank = wb['Unmatched_Bank_Data']
 ws_unmatched_bank.insert_rows(1)
-ws_unmatched_bank.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(unmatched_bank_df.columns))
-ws_unmatched_bank['A1'] = "未匹配BANK_DATA"
-ws_unmatched_bank['A1'].font = yellow_font
-ws_unmatched_bank['A1'].fill = yellow_fill
+if len(unmatched_bank_df.columns) > 0:
+    ws_unmatched_bank.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(unmatched_bank_df.columns))
+    ws_unmatched_bank['A1'] = "未匹配BANK_DATA"
+    ws_unmatched_bank['A1'].font = yellow_font
+    ws_unmatched_bank['A1'].fill = yellow_fill
 
 def unmerge_header(worksheet):
     merged_ranges = worksheet.merged_cells.ranges.copy()
@@ -276,7 +288,7 @@ data_styles_verify = {
     'E': ('FFFFFFFF', '002060', '微软雅黑', 10),  
     'F': ('FFFFFFFF', '002060', '微软雅黑', 10),  
     'G': ('FFFFFFFF', '002060', '微软雅黑', 10),  
-    'H': ('FFFFFFFF', '002060', '微软雅黑', 10),  
+    'H': ('FFFFFFFF', '2c3744', '微软雅黑', 10),  
     'I': ('FFFFFFFF', '2c3744', '微软雅黑', 10),  
     'J': ('FFFFFFFF', '2c3744', '微软雅黑', 10),  
     'K': ('FFFFFFFF', '2c3744', '微软雅黑', 10),  
@@ -335,6 +347,10 @@ if 'GL Data' in wb.sheetnames:
 
 if 'Bank Data' in wb.sheetnames:
     ws_bank_data = wb['Bank Data']
+    ws_bank_data.sheet_state = 'hidden'
+    
+if 'Temp' in wb.sheetnames:
+    ws_bank_data = wb['Temp']
     ws_bank_data.sheet_state = 'hidden'
 
 wb.save(file_path)
