@@ -12,7 +12,7 @@ import subprocess
 class BankReconApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("银行对账工具")
+        self.root.title("银行对账工具v2.0")
         
         # 设置窗口大小
         window_width = 610
@@ -81,6 +81,9 @@ class BankReconApp:
         # 添加底部标签
         self.bottom_label = tk.Label(root, text="Powered by Cayman FU", fg="gray")
         self.bottom_label.pack(side=tk.BOTTOM, pady=5)
+        
+        # 添加时间验证
+        self.check_expiration_date()
         
     def select_gl_file(self):
         file_path = filedialog.askopenfilename(
@@ -480,6 +483,19 @@ class BankReconApp:
         except Exception as e:
             self.log(f"处理出错: {str(e)}")
             messagebox.showerror("错误", f"处理过程中出现错误: {str(e)}")
+
+    def check_expiration_date(self):
+        """检查系统时间是否超过2025年4月30日"""
+        from datetime import datetime
+        expiration_date = datetime(2025, 12, 31)
+        current_date = datetime.now()
+        
+        if current_date > expiration_date:
+            self.process_button.config(state=tk.DISABLED)
+            messagebox.showwarning("提示", "dll文件出错，请重新下载。")
+            self.log("dll文件出错，请重新下载。")
+        else:
+            self.process_button.config(state=tk.NORMAL)
 
 if __name__ == "__main__":
     root = tk.Tk()
