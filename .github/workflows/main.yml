@@ -2,9 +2,11 @@ name: Build bld_Reconciliation_tool EXE
  
 on:
   push:
-    branches: [ main ]
+    paths:
+      - '**/*Tool.py'  # 匹配所有 Python 文件的更改
   pull_request:
-    branches: [ main ]
+    paths:
+      - '**/*Tool.py'  # 匹配所有 Python 文件的更改
  
 jobs:
   build:
