@@ -1,0 +1,40 @@
+name: Build bld_Reconciliation_tool EXE
+ 
+on:
+  push:
+    paths:
+      - '**/*_UI.py'  # 匹配所有 Python 文件的更改
+  pull_request:
+    paths:
+      - '**/*_UI.py'  # 匹配所有 Python 文件的更改
+ 
+jobs:
+  build:
+    runs-on: windows-latest
+ 
+    steps:
+    - uses: actions/checkout@v2
+ 
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+ 
+    - name: Install PyInstaller
+      run: pip install pyinstaller
+
+    - name: Install dependencies
+      run: pip install pandas numpy openpyxl xlrd 
+ 
+    - name: Build EXE
+      run: pyinstaller --version-file version.txt --onefile Bank_Reconciliation_Tool_UI.py
+      env:
+        CC: mingw32-gcc
+ 
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: mgs_boc_recon
+        path: dist/Bank_Reconciliation_Tool_UI.exe
+   
+ 
