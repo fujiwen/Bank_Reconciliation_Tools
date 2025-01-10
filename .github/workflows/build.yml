@@ -34,7 +34,7 @@ jobs:
     - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
-        name: mgs_boc_recon
+        name: Bank_Reconciliation_Tool_UI
         path: dist/Bank_Reconciliation_Tool_UI.exe
    
  
